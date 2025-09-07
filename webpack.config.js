@@ -4,6 +4,7 @@ const Dotenv = require('dotenv-webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCSSExtractionPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 module.exports = {
   mode: 'production',
@@ -51,7 +52,7 @@ module.exports = {
         use: [MiniCSSExtractionPlugin.loader, 'css-loader']
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif|webp)$/i,
         loader: 'file-loader',
         options: {
           name: 'static/[name].[ext]'
@@ -60,7 +61,23 @@ module.exports = {
     ]
   },
   optimization: {
-    minimize: false,
-    minimizer: [new CssMinimizerPlugin()]
+    minimize: true,
+    minimizer: [
+      new CssMinimizerPlugin(),
+      new ImageMinimizerPlugin({
+        test: /\.webp$/i,
+        minimizer: {
+          implementation: ImageMinimizerPlugin.sharpMinify,
+          options: {
+            encodeOptions: {
+              webp: {
+                quality: 33,
+                effort: 4
+              }
+            }
+          }
+        }
+      })
+    ]
   }
 };
