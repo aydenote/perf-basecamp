@@ -5,14 +5,17 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCSSExtractionPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
   mode: 'production',
   entry: './src/index.tsx',
   resolve: { extensions: ['.ts', '.tsx', '.js', '.jsx'] },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].js',
     path: path.join(__dirname, '/dist'),
+    publicPath: '/',
     clean: true
   },
   devServer: {
@@ -22,6 +25,12 @@ module.exports = {
   },
   devtool: 'source-map',
   plugins: [
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'server',
+      openAnalyzer: true,
+      generateStatsFile: true,
+      statsFilename: 'bundle-report.json'
+    }),
     new HtmlWebpackPlugin({
       minify: {
         collapseWhitespace: true,
@@ -31,7 +40,8 @@ module.exports = {
       template: './index.html'
     }),
     new MiniCSSExtractionPlugin({
-      filename: '[name].css'
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[id].[contenthash].css'
     }),
     new CopyWebpackPlugin({
       patterns: [{ from: './public', to: './public' }]
