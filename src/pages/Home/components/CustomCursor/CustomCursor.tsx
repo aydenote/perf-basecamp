@@ -13,9 +13,8 @@ const CustomCursor = ({ text = '' }: CustomCursorProps) => {
   const cursorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (cursorRef.current != null) {
-      cursorRef.current.style.setProperty('--cx', `${mousePosition.pageX}px`);
-      cursorRef.current.style.setProperty('--cy', `${mousePosition.pageY}px`);
+    if (cursorRef.current) {
+      cursorRef.current.style.transform = `translate(${mousePosition.pageX}px, ${mousePosition.pageY}px)`;
     }
   }, [mousePosition]);
 

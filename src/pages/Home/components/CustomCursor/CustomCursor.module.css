@@ -1,12 +1,12 @@
 .cursor {
   pointer-events: none;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 10;
   padding: 0 16px;
   color: var(--white);
-  transform: translate3d(var(--cx, 0px), var(--cy, 0px), 0);
+  will-change: transform;
 }
 
 .cursor::before {
@@ -19,6 +19,7 @@
   height: 24px;
   background: rgba(255, 255, 255, 0.25);
   border-radius: 50%;
+  will-change: transform;
 }
 
 .cursor span {
